@@ -8,8 +8,7 @@ class Setpass2 extends StatefulWidget {
 }
 
 class _SetPass2State extends State<Setpass2> {
-  final GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>(); // Clave para el formulario
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _codigo = TextEditingController();
 
   @override
@@ -19,7 +18,7 @@ class _SetPass2State extends State<Setpass2> {
       child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Form(
-            key: _formKey, // Asignamos la clave al formulario
+            key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

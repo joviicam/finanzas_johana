@@ -8,8 +8,7 @@ class Setpass1 extends StatefulWidget {
 }
 
 class _SetPass1State extends State<Setpass1> {
-  final GlobalKey<FormState> _formKey =
-      GlobalKey<FormState>(); // Clave para el formulario
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _email = TextEditingController();
 
   @override
@@ -19,7 +18,7 @@ class _SetPass1State extends State<Setpass1> {
       child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Form(
-            key: _formKey, // Asignamos la clave al formulario
+            key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,7 +41,6 @@ class _SetPass1State extends State<Setpass1> {
                     if (value == null || value.isEmpty) {
                       return 'Por favor, ingrese su correo electrónico';
                     }
-                    // Puedes agregar más validaciones aquí si es necesario
                     return null;
                   },
                 ),
@@ -52,9 +50,7 @@ class _SetPass1State extends State<Setpass1> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Validamos el formulario cuando se presiona el botón
                         if (_formKey.currentState!.validate()) {
-                          // Si el formulario es válido, muestra los valores y navega a la siguiente pantalla
                           print('Email: ${_email.text}');
                           Navigator.pushNamed(context, '/setPass2');
                         }
