@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "282840806459",
+    "project_id": "restaurantec-bf5fb",
+    "storage_bucket": "restaurantec-bf5fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282840806459:android:238229e8310146804f581e",
+        "android_client_info": {
+          "package_name": "com.example.finanzas_johana"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlPlWG1NzNBap7LX8KclTdBxcl6bVUiCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
