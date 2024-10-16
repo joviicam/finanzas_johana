@@ -16,9 +16,9 @@ class _SplashScreenState extends State<SplashScreen> {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
           print(user.uid);
-          Navigator.pushReplacementNamed(context, '/home');
-        } else {
           Navigator.pushReplacementNamed(context, '/profile');
+        } else {
+          Navigator.pushReplacementNamed(context, '/login');
         }
       });
     });
@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.blueGrey,
       body: Center(
         child: Image.asset(
-          'assets/icon_3d.png',
+          'assets/default.png',
           width: 200,
           height: 200,
         ),

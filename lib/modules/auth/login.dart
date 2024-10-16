@@ -1,3 +1,4 @@
+import 'package:finanzas_johana/kernel/widgets/password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -49,30 +50,7 @@ class _Login2State extends State<Login> {
                   },
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'Contraseña',
-                    label: const Text('Contraseña'),
-                    labelStyle: const TextStyle(color: Colors.black),
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _isObscure = !_isObscure;
-                        });
-                      },
-                      icon: Icon(
-                          _isObscure ? Icons.visibility : Icons.visibility_off),
-                    ),
-                  ),
-                  controller: _password,
-                  obscureText: _isObscure,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, ingrese su contraseña';
-                    }
-                    return null;
-                  },
-                ),
+                TextFieldPassword(controller: _password),
                 const SizedBox(
                   height: 16,
                 ),
@@ -106,6 +84,19 @@ class _Login2State extends State<Login> {
                     )),
                 const SizedBox(
                   height: 16,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/register');
+                  },
+                  child: const Text(
+                    'Registrarse',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
                 SizedBox(
                   width: double.infinity,

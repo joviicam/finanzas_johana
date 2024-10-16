@@ -1,3 +1,4 @@
+import 'package:finanzas_johana/modules/auth/register.dart';
 import 'package:finanzas_johana/modules/home/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -35,6 +36,7 @@ class MainApp extends StatelessWidget {
         '/setPass3': (context) => const Setpass3(),
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/register': (context) => const Register(),
       },
     );
   }
