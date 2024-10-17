@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         title: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.local_shipping,
               color: Colors.black,
             ),
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(width: 15),
-            Icon(
+            const Icon(
               Icons.format_bold,
               color: Colors.black,
             ),
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.black.withOpacity(0.4),
                 ),
               ),
-              Positioned(
+              const Positioned(
                 bottom: 140,
                 left: 15,
                 child: Text(
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              Positioned(
+              const Positioned(
                 bottom: 110,
                 left: 15,
                 child: Text(
@@ -118,14 +118,14 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 10),
+                padding: EdgeInsets.only(left: 10),
                 child: Text(
                   'Nuevos productos',
                   style: TextStyle(
@@ -137,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 10),
+                padding: EdgeInsets.only(right: 10),
                 child: Icon(
                   Icons.arrow_forward,
                   color: Colors.black,
@@ -146,8 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        SizedBox(height: 10),
-        Container(
+        const SizedBox(height: 10),
+        SizedBox(
           width: MediaQuery.of(context).size.width * 0.9,
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -176,7 +176,7 @@ Widget _categoryItem(String categoryName) {
       child: InkWell(
         onTap: () {},
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.transparent),
           ),
@@ -213,18 +213,18 @@ Widget _productCard(String productName, String imagePath, String price) {
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             productName,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'Poppins',
               fontSize: 14,
               color: Colors.black,
             ),
           ),
           Text(
-            '\$' + price,
-            style: TextStyle(
+            '\$$price',
+            style: const TextStyle(
               fontFamily: 'Poppins',
               fontSize: 14,
               color: Colors.black,

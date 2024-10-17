@@ -2,13 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // get current user from firebase to show in profile
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,22 +25,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     backgroundColor: Colors.brown.shade800,
-                    child: const Text('AH'),
                     radius: 36,
+                    child: const Text('AH'),
                   ),
                   const SizedBox(
                     width: 8,
                   ),
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "joviicam9gmail.com",
-                        style: TextStyle(
+                      const Text(
+                        "Johana Alvarez",
+                        style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
-                        "Johana Alvarez",
+                        FirebaseAuth.instance.currentUser?.email ?? "",
                         style: TextStyle(fontSize: 14),
                       )
                     ],
@@ -53,6 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () async {
                       print("me ejecuto ");
                       await FirebaseAuth.instance.signOut();
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                     child: const Text('Cerrar sesión')),
               )

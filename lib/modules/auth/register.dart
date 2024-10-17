@@ -1,6 +1,8 @@
 import 'package:finanzas_johana/kernel/widgets/password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:finanzas_johana/kernel/widgets/password.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -15,7 +17,7 @@ class _RegisterState extends State<Register> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
-  bool _isObscure = true;
+  final bool _isObscure = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +61,26 @@ class _RegisterState extends State<Register> {
                             width: double.infinity,
                             height: 48,
                             child: ElevatedButton(
-                              onPressed: () => print('Creando cuenta'),
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  try {
+                                    final credential = await FirebaseAuth
+                                        .instance
+                                        .createUserWithEmailAndPassword(
+                                            email: _email.text,
+                                            password: _password.text);
+                                    Navigator.pushReplacementNamed(
+                                        context, '/home');
+                                  } on FirebaseAuthException catch (e) {
+                                    if (e.code == 'user-not-found') {
+                                      print('No user found for that email.');
+                                    } else if (e.code == 'wrong-password') {
+                                      print(
+                                          'Wrong password provided for that user.');
+                                    }
+                                  }
+                                }
+                              },
                               style: OutlinedButton.styleFrom(
                                   backgroundColor:
                                       const Color.fromARGB(255, 144, 139, 144),

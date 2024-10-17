@@ -14,7 +14,42 @@ class _Login2State extends State<Login> {
       GlobalKey<FormState>(); // Clave para el formulario
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  bool _isObscure = true;
+  bool _isObscured = true;
+  bool _isValid = false; // para saber si los campos son válidos
+  bool _emailTouched = false;
+  bool _passwordTouched = false;
+  final bool _isObscure = true;
+
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  String? _validatePassword(String? value) {
+    if (!_passwordTouched) return null;
+    if (value == null || value.isEmpty) {
+      return 'Por favor ingresa tu contraseña';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (!_emailTouched) return null;
+    if (value == null || value.isEmpty) {
+      return 'Por favor ingresa tu correo';
+    }
+    if (!value.contains('@')) {
+      return 'Por favor ingresa un correo válido';
+    }
+    return null;
+  }
+
+  void _validateForm() {
+    setState(() {
+      _isValid = _formKey.currentState?.validate() ?? false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +77,11 @@ class _Login2State extends State<Login> {
                   ),
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, ingrese su correo electrónico';
-                    }
-                    return null;
+                  validator: _validateEmail,
+                  onTap: () {
+                    setState(() {
+                      _emailTouched = true;
+                    });
                   },
                 ),
                 const SizedBox(height: 16),
@@ -59,18 +94,31 @@ class _Login2State extends State<Login> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () async {
+                        setState(() {
+                          _emailTouched = true;
+                          _passwordTouched = true;
+                        });
+
                         if (_formKey.currentState!.validate()) {
                           try {
                             final credential = await FirebaseAuth.instance
                                 .signInWithEmailAndPassword(
                                     email: _email.text,
                                     password: _password.text);
+                            Navigator.pushReplacementNamed(context, '/profile');
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'user-not-found') {
                               print('No user found for that email.');
                             } else if (e.code == 'wrong-password') {
                               print('Wrong password provided for that user.');
                             }
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Error al iniciar sesión, verifica tus datos'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                           }
                         }
                       },
