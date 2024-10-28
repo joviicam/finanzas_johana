@@ -18,10 +18,28 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   initState() {
     super.initState();
-    loadRestaurants();
+    //loadRestaurants();
+    db.collection("restaurants").snapshots().listen((event) {
+      restaurants = [];
+      for (var doc in event.docs) {
+        final restaurant = Restaurant(
+          doc.data()["name"],
+          doc.data()["description"],
+          List<String>.from(doc.data()["images"]),
+          doc.data()["rating"],
+          doc.data()["count"],
+        );
+        restaurants.add(restaurant);
+      }
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
+    });
   }
 
-  Future<void> loadRestaurants() async {
+/*   Future<void> loadRestaurants() async {
     try {
       final event = await db.collection('restaurants').get();
       final List<Restaurant> loadedRestaurants = [];
@@ -47,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
