@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finanzas_johana/modules/home/entities/restaurant.dart';
+import 'package:finanzas_johana/widgets/home/list_restaurant_data.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -8,231 +11,67 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final db = FirebaseFirestore.instance;
+  List<Restaurant> restaurants = [];
+  bool loading = true; // Cambiamos a true porque estamos cargando los datos
+
+  @override
+  initState() {
+    super.initState();
+    loadRestaurants();
+  }
+
+  Future<void> loadRestaurants() async {
+    try {
+      final event = await db.collection('restaurants').get();
+      final List<Restaurant> loadedRestaurants = [];
+      for (var doc in event.docs) {
+        final restaurant = Restaurant(
+          doc.data()["name"],
+          doc.data()["description"],
+          List<String>.from(doc.data()["images"]),
+          doc.data()["rating"],
+          doc.data()["count"],
+        );
+        loadedRestaurants.add(restaurant);
+      }
+      setState(() {
+        restaurants = loadedRestaurants;
+        loading = false; // Cuando termine de cargar, cambiar a false
+      });
+    } catch (e) {
+      print("Error al cargar los restaurantes: $e");
+      if (mounted) {
+        setState(() {
+          loading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Row(
-          children: [
-            const Icon(
-              Icons.local_shipping,
-              color: Colors.black,
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: TextField(
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 15,
-                  color: Colors.black,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Buscar',
-                  hintStyle: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 15,
-                    color: Colors.grey,
-                  ),
-                  suffixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[100],
-                ),
-              ),
-            ),
-            const SizedBox(width: 15),
-            const Icon(
-              Icons.format_bold,
-              color: Colors.black,
-            ),
-          ],
-        ),
+        title: const Text('Home'),
+        backgroundColor: Colors.blue,
       ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-          child: Column(children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              _categoryItem('Todas'),
-              _categoryItem('Decoración'),
-              _categoryItem('Juguetes'),
-              _categoryItem('Figuras'),
-              _categoryItem('Interiores'),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(
-                  'assets/banner.png',
-                  width: 380,
-                  height: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Container(
-                width: 380,
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.black.withOpacity(0.4),
-                ),
-              ),
-              const Positioned(
-                bottom: 140,
-                left: 15,
-                child: Text(
-                  'ARTE EN CADA PUNTADA',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              const Positioned(
-                bottom: 110,
-                left: 15,
-                child: Text(
-                  'CALIDAD EN CADA DETALLE.',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Text(
-                  'Nuevos productos',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(
-                  Icons.arrow_forward,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                _productCard('Producto 1', 'assets/product1.png', '99.50'),
-                _productCard('Producto 2', 'assets/product1.png', '99.50'),
-                _productCard('Producto 3', 'assets/product1.png', '99.50'),
-                _productCard('Producto 4', 'assets/product1.png', '99.50'),
-              ],
-            ),
-          ),
-        ),
-      ])),
+      body: ListView.builder(
+          padding: const EdgeInsets.all(8),
+          itemCount: restaurants.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ListRestaurantData(restaurant: restaurants[index]);
+          }),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.amber,
+        onPressed: () => Navigator.pushNamed(context, '/home'),
+        child: const Icon(Icons.home),
+      ),
     );
   }
-}
-
-Widget _categoryItem(String categoryName) {
-  bool isSelected = categoryName == 'Todas';
-
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 5),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {},
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.transparent),
-          ),
-          child: Text(
-            categoryName,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 16,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _productCard(String productName, String imagePath, String price) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 5),
-    child: Container(
-      width: 150,
-      padding: const EdgeInsets.all(5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              imagePath,
-              width: 150,
-              height: 180,
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            productName,
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 14,
-              color: Colors.black,
-            ),
-          ),
-          Text(
-            '\$$price',
-            style: const TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 14,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }

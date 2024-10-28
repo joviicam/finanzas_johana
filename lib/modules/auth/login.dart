@@ -105,7 +105,7 @@ class _Login2State extends State<Login> {
                                 .signInWithEmailAndPassword(
                                     email: _email.text,
                                     password: _password.text);
-                            Navigator.pushReplacementNamed(context, '/profile');
+                            Navigator.pushReplacementNamed(context, '/home');
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'user-not-found') {
                               print('No user found for that email.');
