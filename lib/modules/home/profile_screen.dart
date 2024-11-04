@@ -36,12 +36,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       const Text(
                         "Johana Alvarez",
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       Text(
                         FirebaseAuth.instance.currentUser?.email ?? "",
-                        style: TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 14),
                       )
                     ],
                   )

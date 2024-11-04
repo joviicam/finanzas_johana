@@ -1,7 +1,5 @@
 import 'package:finanzas_johana/kernel/widgets/password.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:finanzas_johana/kernel/widgets/password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Register extends StatefulWidget {

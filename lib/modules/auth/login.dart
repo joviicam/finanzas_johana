@@ -14,12 +14,13 @@ class _Login2State extends State<Login> {
       GlobalKey<FormState>(); // Clave para el formulario
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
-  bool _isObscured = true;
+  final bool _isObscured = true;
   bool _isValid = false; // para saber si los campos son válidos
   bool _emailTouched = false;
   bool _passwordTouched = false;
   final bool _isObscure = true;
 
+  @override
   void dispose() {
     _email.dispose();
     _password.dispose();
@@ -105,7 +106,8 @@ class _Login2State extends State<Login> {
                                 .signInWithEmailAndPassword(
                                     email: _email.text,
                                     password: _password.text);
-                            Navigator.pushReplacementNamed(context, '/home');
+                            Navigator.pushReplacementNamed(
+                                context, '/navigation');
                           } on FirebaseAuthException catch (e) {
                             if (e.code == 'user-not-found') {
                               print('No user found for that email.');

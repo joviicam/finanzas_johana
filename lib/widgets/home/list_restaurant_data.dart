@@ -1,7 +1,6 @@
 import 'package:finanzas_johana/modules/home/entities/restaurant.dart';
 import 'package:finanzas_johana/modules/home/restaurant_details.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 
 class ListRestaurantData extends StatelessWidget {

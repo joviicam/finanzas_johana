@@ -1,5 +1,6 @@
 import 'package:finanzas_johana/modules/auth/register.dart';
 import 'package:finanzas_johana/modules/home/profile_screen.dart';
+import 'package:finanzas_johana/navigation/navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:finanzas_johana/modules/auth/login.dart';
@@ -37,6 +38,7 @@ class MainApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/register': (context) => const Register(),
+        '/navigation': (context) => const Navigation(),
       },
     );
   }
