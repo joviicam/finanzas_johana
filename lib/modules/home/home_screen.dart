@@ -30,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
           doc.data()["rating"],
           doc.data()["count"],
           List<String>.from(doc.data()["comments"]),
+          doc.data()["latitud"],
+          doc.data()["longitud"],
         );
         restaurants.add(restaurant);
       }

@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 class MapSample extends StatefulWidget {
   const MapSample({super.key});
@@ -10,32 +10,77 @@ class MapSample extends StatefulWidget {
   State<MapSample> createState() => MapSampleState();
 }
 
-//18.850516533133128, -99.20073201873734
 class MapSampleState extends State<MapSample> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+  CameraPosition? _initialPosition;
+  Set<Marker> _markers = {};
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(18.850516533133128, -99.20073201873734),
-    zoom: 14.4746,
-  );
-
-  static const CameraPosition _kLake = CameraPosition(
+  Future<void> _goToTheLake() async {
+    final GoogleMapController controller = await _controller.future;
+    const CameraPosition kLake = CameraPosition(
       bearing: 192.8334901395799,
       target: LatLng(37.43296265331129, -122.08832357078792),
       tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+      zoom: 19.151926040649414,
+    );
+
+    await controller.animateCamera(CameraUpdate.newCameraPosition(kLake));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _determinePosition().then((position) {
+      setState(() {
+        _initialPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: 14.4746,
+        );
+        _markers.add(Marker(
+            markerId: const MarkerId("currentLocation"),
+            position: LatLng(position.latitude, position.longitude),
+            infoWindow: const InfoWindow(
+                title: 'Mi ubicación', snippet: 'Aqui estoy')));
+      });
+    });
+  }
+
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await Geolocator.openLocationSettings();
+      return Future.error('Location services are disabled.');
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied.');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.none,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
+      body: _initialPosition == null
+          ? const Center(child: CircularProgressIndicator())
+          : GoogleMap(
+              mapType: MapType.none,
+              initialCameraPosition: _initialPosition!,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+              markers: _markers,
+            ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goToTheLake,
         label: const Text('To the lake!'),
@@ -43,9 +88,19 @@ class MapSampleState extends State<MapSample> {
       ),
     );
   }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
 }
+
+//18.851147069213507, -99.20120692671632
+
+/*
+
+
+Bearing: Representa la rotación de la cámara en grados en el plano horizontal, similar a una 
+brújula. Un valor de 0 apunta al norte, 90 al este, 180 al sur, y 270 al oeste. Esto permite orientar el mapa en diferentes direcciones.
+
+Tilt: Controla el ángulo de inclinación de la cámara en relación con el suelo. Un valor de 0 grados 
+significa que la cámara está perpendicular al suelo (vista de arriba hacia abajo), mientras que valores más altos, hasta 90, 
+inclinan la vista en perspectiva, proporcionando una vista más "3D".
+
+
+*/
