@@ -1,7 +1,9 @@
 import 'package:finanzas_johana/modules/auth/register.dart';
 import 'package:finanzas_johana/modules/home/profile_screen.dart';
+import 'package:finanzas_johana/modules/tutorial/tutorial.dart';
 import 'package:finanzas_johana/navigation/navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'package:finanzas_johana/modules/auth/login.dart';
 import 'package:finanzas_johana/navigation/setPass1.dart';
@@ -38,7 +40,10 @@ class MainApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/profile': (context) => const ProfileScreen(),
         '/register': (context) => const Register(),
-        '/navigation': (context) => const Navigation(),
+        '/navigation': (context) => const Navigation(
+              nextButton: true,
+            ),
+        '/tutorial': (context) => const Tutorial(),
       },
     );
   }
